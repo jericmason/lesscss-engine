@@ -15,6 +15,7 @@
 package com.asual.lesscss.loader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * ResourceLoader is used to locate and load stylesheets referenced with @include
@@ -44,6 +45,8 @@ public interface ResourceLoader {
 	 *            relative resource file path.
 	 * @param paths
 	 *            paths to search for resource under.
+	 * @param loadedStack
+	 *            stack of resources that have been loaded so far (empty by default)
 	 * @param charset
 	 *            character set name, valid with respect to
 	 *            {@link java.nio.charset.Charset}.
@@ -52,5 +55,5 @@ public interface ResourceLoader {
 	 *             when i/o error occurs while loading the resource, or charset
 	 *             is invalid.
 	 */
-	public String load(String resource, String[] paths, String charset) throws IOException;
+	public String load(String resource, String[] paths, ArrayList<String> loadedStack, String charset) throws IOException;
 }

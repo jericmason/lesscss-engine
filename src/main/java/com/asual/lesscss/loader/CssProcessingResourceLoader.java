@@ -15,6 +15,7 @@
 package com.asual.lesscss.loader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * A {@link ResourceLoader} that allows using lesscss @include in plain .css
@@ -44,12 +45,12 @@ public class CssProcessingResourceLoader implements ResourceLoader {
 	}
 
 	@Override
-	public String load(String resource, String[] paths, String charset) throws IOException {
+	public String load(String resource, String[] paths, ArrayList<String> loadedStack, String charset) throws IOException {
 		String content;
 		if (delegate.exists(resource, paths)) {
-			content = delegate.load(resource, paths, charset);
+			content = delegate.load(resource, paths, loadedStack, charset);
 		} else {
-			content = delegate.load(resource.replaceFirst("\\.less$", ".css"), paths,
+			content = delegate.load(resource.replaceFirst("\\.less$", ".css"), paths, loadedStack,
 					charset);
 		}
 		return content.replaceAll("\\.css", ".less");

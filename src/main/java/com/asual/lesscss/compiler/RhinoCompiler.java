@@ -1,18 +1,26 @@
 package com.asual.lesscss.compiler;
 
-import com.asual.lesscss.LessException;
-import com.asual.lesscss.LessOptions;
-import com.asual.lesscss.loader.ResourceLoader;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.mozilla.javascript.*;
-import org.mozilla.javascript.tools.shell.Global;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeJavaObject;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.UniqueTag;
+import org.mozilla.javascript.tools.shell.Global;
+
+import com.asual.lesscss.LessException;
+import com.asual.lesscss.LessOptions;
+import com.asual.lesscss.loader.ResourceLoader;
 
 public class RhinoCompiler implements LessCompiler {
 
@@ -59,11 +67,11 @@ public class RhinoCompiler implements LessCompiler {
 				null);
 		compile = (Function) scope.get("compile", scope);
 	}
-
+	
 	@Override
-	public String compile(String input, String location, boolean compress) throws LessException {
+	public String compile(String input, String location, ArrayList<String> loadedStack, boolean compress) throws LessException {
 		try {
-			return call(compile, new Object[]{input, location, compress});
+			return call(compile, new Object[]{input, location, new NativeJavaObject(scope, loadedStack, ArrayList.class), compress});
 		}
 		catch (Exception e){
 			throw new LessException(parseLessException(e));

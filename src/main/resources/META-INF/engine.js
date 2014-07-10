@@ -8,7 +8,8 @@ var basePath = function(path) {
 		return path.replace(/^(.*[\/\\])[^\/\\]*$/, '$1');
 	}
 	return '';
-}, compile = function(source, path, compress) {
+}, compile = function(source, path, loadedStack, compress) {
+	
 	var error = null, result = null, parser = new (window.less.Parser)({
 		optimization : lessenv.optimization,
 		paths : [ basePath(path) ],
@@ -48,7 +49,7 @@ var basePath = function(path) {
 					sourceMapURL : lessenv.sourceMapURL,
 					sourceMapGenerator : lessenv.sourceMapGenerator,
 					writeSourceMap: lessenv.sourceMapURL ? lessenv.writeSourceMap : null
-				}).parse(String(lessenv.loader.load(path, searchpaths, lessenv.charset)),
+				}).parse(String(lessenv.loader.load(path, searchpaths, loadedStack, lessenv.charset)),
 						function(e, root) {
 							if (e != null)
 								throw e;

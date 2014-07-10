@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.apache.commons.logging.Log;
@@ -99,7 +100,7 @@ public class LessEngine {
 	public String compile(String input, String location, boolean compress)
 		throws LessException {
 		long time = System.currentTimeMillis();
-		String result = compiler.compile(input, location == null ? "" : location, compress);
+		String result = compiler.compile(input, location == null ? "" : location, new ArrayList<String>(), compress);
 		logger.debug("The compilation of '" + input + "' took "
 				+ (System.currentTimeMillis() - time) + " ms.");
 		return result;
@@ -113,8 +114,9 @@ public class LessEngine {
 		long time = System.currentTimeMillis();
 		String location = input.toString();
 		logger.debug("Compiling URL: " + location);
-		String source = loader.load(getFile(location), getPaths(location), options.getCharset());
-		String result = compiler.compile(source, location, compress);
+		ArrayList<String> resourceStack = new ArrayList<String>();
+		String source = loader.load(getFile(location), getPaths(location), resourceStack, options.getCharset());
+		String result = compiler.compile(source, location, resourceStack, compress);
 		logger.debug("The compilation of '" + input + "' took "
 				+ (System.currentTimeMillis() - time) + " ms.");
 		return result;
@@ -128,8 +130,9 @@ public class LessEngine {
 		long time = System.currentTimeMillis();
 		String location = input.getLocation();
 		logger.debug("Compiling URL: " + location);
-		String source = loader.load(location, getPaths(location), options.getCharset());
-		String result = compiler.compile(source, location, compress);
+		ArrayList<String> resourceStack = new ArrayList<String>();
+		String source = loader.load(location, getPaths(location), resourceStack, options.getCharset());
+		String result = compiler.compile(source, location, resourceStack, compress);
 		logger.debug("The compilation of '" + input + "' took "
 				+ (System.currentTimeMillis() - time) + " ms.");
 		return result;
@@ -144,8 +147,9 @@ public class LessEngine {
 		String location = input.getAbsolutePath();
 		logger.debug("Compiling File: " + "file:" + location);
 		String source = null;
-		source = loader.load(getFile(location), getPaths(location), options.getCharset());
-		String result = compiler.compile(source, location, compress);
+		ArrayList<String> resourceStack = new ArrayList<String>();
+		source = loader.load(getFile(location), getPaths(location), resourceStack, options.getCharset());
+		String result = compiler.compile(source, location, resourceStack, compress);
 		logger.debug("The compilation of '" + input + "' took "
 				+ (System.currentTimeMillis() - time) + " ms.");
 		return result;

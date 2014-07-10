@@ -15,6 +15,7 @@
 package com.asual.lesscss.loader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * A delegating {@ResourceLoader} that removes \r characters
@@ -36,7 +37,7 @@ public class UnixNewlinesResourceLoader implements ResourceLoader {
 	}
 
 	@Override
-	public String load(String resource, String[] paths, String charset) throws IOException {
-		return delegate.load(resource, paths, charset).replaceAll("\r", "");
+	public String load(String resource, String[] paths, ArrayList<String> loadedStack, String charset) throws IOException {
+		return delegate.load(resource, paths, loadedStack, charset).replaceAll("\r", "");
 	}
 }

@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,7 +89,7 @@ public abstract class StreamResourceLoader implements ResourceLoader {
 	}
 
 	@Override
-	public String load(String resource, String[] paths, String charset) throws IOException {
+	public String load(String resource, String[] paths, ArrayList<String> loadedStack, String charset) throws IOException {
 		for(String path : paths) {
 			String pathToResource = appendPathToResource(path, resource);
 			Matcher m = PATTERN.matcher(resource);
@@ -110,6 +111,7 @@ public abstract class StreamResourceLoader implements ResourceLoader {
 			}
 			InputStream is = openStream(pathToResource);
 			if (is != null) {
+				loadedStack.add(pathToResource);
 				String readStream = readStream(is, charset);
 				return readStream;
 			}

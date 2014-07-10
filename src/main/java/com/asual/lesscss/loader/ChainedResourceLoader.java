@@ -15,6 +15,7 @@
 package com.asual.lesscss.loader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * A {@link ResourceLoader} delegates to a sequence of other loaders, asking
@@ -56,10 +57,10 @@ public class ChainedResourceLoader implements ResourceLoader {
 	 * result will be retured.
 	 */
 	@Override
-	public String load(String resource, String[] paths, String charset) throws IOException {
+	public String load(String resource, String[] paths, ArrayList<String> loadedStack, String charset) throws IOException {
 		for (ResourceLoader loader : loaders) {
 			if (loader.exists(resource, paths)) {
-				return loader.load(resource, paths, charset);
+				return loader.load(resource, paths, loadedStack, charset);
 			}
 		}
 		throw new IOException("No such file " + resource);
